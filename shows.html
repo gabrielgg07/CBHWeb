@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shows — Coral Bank Hollow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:       #162d47;
+      --orange:     #e8943a;
+      --orange-dark:#c97930;
+      --cyan:       #7dd3e8;
+      --white:      #f5f0e8;
+      --muted:      rgba(245,240,232,0.5);
+      --divider:    rgba(245,240,232,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0d0d0d;
+      color: var(--white);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ══════════════════════════════
+       NAV (identical to other pages)
+    ══════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: var(--nav-bg);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      border-bottom: 1px solid rgba(59, 191, 204, 0.15);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center;
+      text-decoration: none; flex-shrink: 0;
+    }
+
+    .nav-logo-placeholder {
+      height: 36px; padding: 0 12px;
+      border: 2px dashed rgba(232,148,58,0.5);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.58rem; letter-spacing: 0.1em;
+      color: rgba(232,148,58,0.6);
+      text-transform: uppercase; white-space: nowrap;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 1.8rem; list-style: none; }
+
+    .nav-links a {
+      color: var(--white); text-decoration: none;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      position: relative; transition: color 0.2s;
+    }
+
+    .nav-links a::after {
+      content: ''; position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 2px; background: var(--orange);
+      transform: scaleX(0); transition: transform 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--orange); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { transform: scaleX(1); }
+
+    .nav-socials { display: flex; align-items: center; gap: 0.9rem; flex-shrink: 0; }
+
+    .nav-socials a {
+      color: var(--white); opacity: 0.7;
+      text-decoration: none; display: flex; align-items: center;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .nav-socials a:hover { opacity: 1; color: var(--cyan); }
+    .icon { width: 17px; height: 17px; fill: currentColor; }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; background: none; border: none;
+    }
+
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--white); }
+
+    .nav-mobile-drawer {
+      display: none; position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: var(--navy);
+      border-bottom: 2px solid var(--orange);
+      z-index: 190; padding: 1.5rem 2rem;
+      flex-direction: column; gap: 1.2rem;
+    }
+
+    .nav-mobile-drawer.open { display: flex; }
+
+    .nav-mobile-drawer a {
+      color: var(--white); text-decoration: none;
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+
+    .nav-mobile-socials {
+      display: flex; gap: 1.2rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-mobile-socials a { color: var(--white); opacity: 0.7; display: flex; }
+
+    /* ══════════════════════════════
+       HERO BANNER
+    ══════════════════════════════ */
+    .shows-hero {
+      margin-top: 60px;
+      position: relative;
+      width: 100%;
+      height: clamp(260px, 38vw, 440px);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Background photo */
+    .shows-hero img {
+      position: absolute;
+      inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+
+    /* Placeholder if no photo yet */
+    .shows-hero-placeholder {
+      position: absolute;
+      inset: 0;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0.75rem;
+    }
+
+    .shows-hero-placeholder svg { opacity: 0.15; }
+    .shows-hero-placeholder span {
+      font-size: 0.62rem; letter-spacing: 0.18em;
+      text-transform: uppercase; opacity: 0.3;
+    }
+
+    /* Sepia-ish tint overlay to match the Harvey Street vibe */
+    .shows-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(13,13,13,0.35) 0%,
+        rgba(13,13,13,0.15) 40%,
+        rgba(13,13,13,0.65) 100%
+      );
+    }
+
+    .shows-hero-title {
+      position: relative; z-index: 2;
+      font-size: clamp(1.1rem, 3.2vw, 2rem);
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      text-align: center;
+      padding: 0 1.5rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+
+    /* ══════════════════════════════
+       SHOWS LIST SECTION
+    ══════════════════════════════ */
+    .shows-section {
+      padding: 0 0 5rem;
+    }
+
+    .shows-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Divider + track prompt */
+    .shows-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.6rem 0 1.2rem;
+      border-bottom: 1px solid var(--divider);
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .shows-meta-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .shows-track-link {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--white);
+    }
+
+    .shows-track-link a {
+      color: var(--white);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .shows-track-link a:hover { color: var(--orange); }
+
+    /* ── Show Row ── */
+    .show-row {
+      display: grid;
+      grid-template-columns: 110px 1fr auto auto;
+      align-items: center;
+      gap: 1rem 1.5rem;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid var(--divider);
+      transition: background 0.15s;
+    }
+
+    .show-row:hover {
+      background: rgba(255,255,255,0.02);
+      border-radius: 4px;
+    }
+
+    /* Date */
+    .show-date {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      white-space: nowrap;
+    }
+
+    /* Venue + location */
+    .show-info { min-width: 0; }
+
+    .show-venue {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--orange);
+      margin-bottom: 0.15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .show-location {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    /* Buttons */
+    .show-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .btn-rsvp, .btn-tickets {
+      display: inline-block;
+      padding: 0.45rem 1.1rem;
+      border-radius: 4px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn-rsvp {
+      border: 1.5px solid var(--orange);
+      background: transparent;
+      color: var(--orange);
+    }
+
+    .btn-rsvp:hover {
+      background: var(--orange);
+      color: var(--navy);
+      transform: translateY(-1px);
+    }
+
+    .btn-tickets {
+      background: var(--orange);
+      border: 1.5px solid var(--orange);
+      color: var(--navy);
+    }
+
+    .btn-tickets:hover {
+      background: var(--orange-dark);
+      border-color: var(--orange-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-free {
+      background: transparent;
+      border: 1.5px solid var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn-free:hover {
+      background: var(--cyan);
+      color: var(--navy);
+      transform: translateY(-1px);
+    }
+
+    /* "No shows" empty state */
+    .shows-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+
+    .shows-empty p {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .nav-logo-img {
+      height: 40px;        /* control size */
+      width: auto;         /* keeps aspect ratio */
+      object-fit: contain; /* prevents cropping */
+      border-radius: 0;    /* remove circle */
+      display: block;
+    }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links, .nav-socials { display: none; }
+      .nav-hamburger { display: flex; }
+
+      /* Stack show rows on mobile */
+      .show-row {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+        padding: 1rem 0.25rem;
+      }
+
+      .show-actions {
+        padding-top: 0.3rem;
+      }
+
+      .show-venue { white-space: normal; }
+    }
+
+    @media (max-width: 480px) {
+      .btn-rsvp, .btn-tickets { padding: 0.5rem 0.9rem; font-size: 0.6rem; }
+      .shows-meta { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAV ══ -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+       <img src="images/logo-trans.png" alt="Coral Bank Hollow logo" class="nav-logo-img">
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="shows.html" class="active">Shows</a></li>
+      <li><a href="music.html">Music</a></li>
+      <li><a href="#merch">Merch</a></li>
+      <li><a href="media.html">Media</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-socials">
+      <a href="mailto:coralbankhollow@gmail.com" title="Email">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/coralbankhollow/" title="Instagram">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="https://open.spotify.com/artist/0JOY1f8W31tqVf5EaBoRbS" title="Spotify">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      </a>
+      <a href="#" title="TikTok">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.78a4.85 4.85 0 01-1.01-.09z"/></svg>
+      </a>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="nav-mobile-drawer" id="mobileDrawer">
+    <a href="about.html">About</a>
+    <a href="shows.html">Shows</a>
+    <a href="music.html">Music</a>
+    <a href="#merch">Merch</a>
+    <a href="media.html">Media</a>
+    <a href="contact.html">Contact</a>
+    <div class="nav-mobile-socials">
+      <a href="mailto:yourband@email.com"><svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+      <a href="#"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+      <a href="#"><svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg></a>
+      <a href="#"><svg class="icon" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.78a4.85 4.85 0 01-1.01-.09z"/></svg></a>
+    </div>
+  </div>
+
+  <!-- ══ HERO BANNER ══ -->
+  <div class="shows-hero">
+    <!--
+      TO ADD YOUR PHOTO: replace the placeholder div below with:
+      <img src="shows-photo.jpg" alt="Coral Bank Hollow live">
+    -->
+    <div class="shows-hero-placeholder">
+      <img src="images/band2.jpeg" alt="Coral Bank Hollow live">
+    </div>
+    <div class="shows-hero-overlay"></div>
+    <h1 class="shows-hero-title">Upcoming Coral Bank Hollow Shows</h1>
+  </div>
+
+  <!-- ══ SHOWS LIST ══ -->
+  <section class="shows-section">
+    <div class="shows-inner">
+
+      <div class="shows-meta">
+        <span class="shows-meta-label">Upcoming Dates</span>
+        <span class="shows-track-link">
+          <a href="https://www.instagram.com/coralbankhollow/">Track us</a> for concert, live stream and tour updates.
+        </span>
+      </div>
+
+      <!-- ════════════════════════════════════════════
+           SHOWS — add or remove rows as needed.
+           For each show, copy one <div class="show-row"> block.
+
+           Button options:
+             RSVP only:    use .btn-rsvp
+             Tickets:      use .btn-tickets
+             Free show:    use .btn-tickets btn-free  (text: "Free")
+             Both:         use both buttons
+             No link yet:  remove href and add disabled style
+      ════════════════════════════════════════════ -->
+
+      <div class="show-row">
+        <span class="show-date">Thu, April 30</span>
+        <div class="show-info">
+          <p class="show-venue">The Milk Parlor</p>
+          <p class="show-location">Blacksburg, VA</p>
+        </div>
+        <div class="show-actions">
+          <a href="#" class="btn-rsvp">RSVP</a>
+          <a href="#" class="btn-tickets btn-free">Free</a>
+        </div>
+      </div>
+
+      <div class="show-row">
+        <span class="show-date">Fri, June 26</span>
+        <div class="show-info">
+          <p class="show-venue">Hot Tuna</p>
+          <p class="show-location">Virginia Beach, VA</p>
+        </div>
+        <div class="show-actions">
+          <a href="#" class="btn-rsvp">RSVP</a>
+          <a href="#" class="btn-tickets btn-free">Free</a>
+          <!-- <a href="#" class="btn-tickets">Tickets</a> -->
+        </div>
+      </div>
+      <div class="show-row">
+        <span class="show-date">Sat, June 27</span>
+        <div class="show-info">
+          <p class="show-venue">TBD</p>
+          <p class="show-location">Baltimore, MD</p>
+        </div>
+        <div class="show-actions">
+          <a href="#" class="btn-rsvp">TBD</a>
+          <a href="#" class="btn-tickets">TBD</a>
+        </div>
+      </div>
+
+      <div class="show-row">
+        <span class="show-date">Sat, July 04</span>
+        <div class="show-info">
+          <p class="show-venue">Hardywood Brewery</p>
+          <p class="show-location">Richmond, Va</p>
+        </div>
+        <div class="show-actions">
+          <a href="#" class="btn-rsvp">RSVP</a>
+          <a href="#" class="btn-tickets btn-free">Free</a>
+        </div>
+      </div>
+
+
+      <!--
+        Copy and paste this block for each additional show:
+
+        <div class="show-row">
+          <span class="show-date">Day, MON DD</span>
+          <div class="show-info">
+            <p class="show-venue">Venue Name</p>
+            <p class="show-location">City, ST</p>
+          </div>
+          <div class="show-actions">
+            <a href="#" class="btn-rsvp">RSVP</a>
+            <a href="#" class="btn-tickets">Tickets</a>
+          </div>
+        </div>
+      -->
+
+    </div>
+  </section>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const drawer    = document.getElementById('mobileDrawer');
+    hamburger.addEventListener('click', () => drawer.classList.toggle('open'));
+    drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
+  </script>
+</body>
+</html>

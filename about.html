@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Coral Bank Hollow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:       #162d47;
+      --navy-mid:   #1e3d59;
+      --navy-light: #254b6e;
+      --orange:     #e8943a;
+      --orange-dark:#c97930;
+      --cyan:       #7dd3e8;
+      --white:      #f5f0e8;
+      --muted:      rgba(245,240,232,0.55);
+      --divider:    rgba(232,148,58,0.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0d0d0d;
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════
+       NAV (identical to index)
+    ══════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: var(--nav-bg);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      border-bottom: 1px solid rgba(59, 191, 204, 0.15);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-placeholder {
+      height: 36px;
+      padding: 0 12px;
+      border: 2px dashed rgba(232,148,58,0.5);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: rgba(232,148,58,0.6);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 2px;
+      background: var(--orange);
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--orange); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { transform: scaleX(1); }
+
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .nav-socials a {
+      color: var(--white);
+      opacity: 0.7;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .nav-socials a:hover { opacity: 1; color: var(--cyan); }
+    .icon { width: 17px; height: 17px; fill: currentColor; }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+    }
+
+    .nav-mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: var(--navy);
+      border-bottom: 2px solid var(--orange);
+      z-index: 190;
+      padding: 1.5rem 2rem;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .nav-mobile-drawer.open { display: flex; }
+
+    .nav-mobile-drawer a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .nav-mobile-socials {
+      display: flex;
+      gap: 1.2rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-mobile-socials a { color: var(--white); opacity: 0.7; display: flex; }
+
+    /* ══════════════════════════════
+       BAND PHOTO BANNER
+    ══════════════════════════════ */
+    .band-photo {
+      margin-top: 60px;
+      width: 100%;
+      height: clamp(280px, 45vw, 520px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .band-photo img,
+    .band-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+      display: block;
+    }
+
+    .band-photo-placeholder {
+      background: var(--navy-mid);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .band-photo-placeholder svg { opacity: 0.25; }
+
+    .band-photo-placeholder span {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.4;
+    }
+
+    /* ══════════════════════════════
+       PAGE WRAPPER
+    ══════════════════════════════ */
+    .page {
+      background: #0d0d0d;
+      padding-bottom: 6rem;
+    }
+
+    /* ══════════════════════════════
+       TAGLINE SECTION
+    ══════════════════════════════ */
+    .tagline-section {
+      text-align: center;
+      padding: 3.5rem 2rem 2.5rem;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .tagline-rule {
+      width: 48px;
+      height: 2px;
+      background: var(--orange);
+      margin: 0 auto 1.5rem;
+    }
+
+    .tagline-text {
+      font-size: clamp(0.95rem, 2.2vw, 1.25rem);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 1.7;
+      color: var(--white);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ══════════════════════════════
+       CONTENT SECTIONS
+    ══════════════════════════════ */
+    .content-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Section header style */
+    .section-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .section-body {
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: rgba(245,240,232,0.78);
+    }
+
+    .section-body p + p { margin-top: 1rem; }
+
+    /* ── About / Bio ── */
+    .about-section {
+      padding: 3.5rem 0 3rem;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    /* ── Stats row ── */
+    .stats-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .stat-card {
+      background: var(--navy-mid);
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      padding: 1.4rem 1.2rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--orange);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Genre / Sound ── */
+    .sound-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .tag {
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--orange);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+
+    /* ── Press Quotes ── */
+    .press-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .quote-card {
+      background: var(--navy-mid);
+      border-left: 3px solid var(--orange);
+      border-radius: 0 8px 8px 0;
+      padding: 1.4rem 1.4rem 1.4rem 1.6rem;
+    }
+
+    .quote-text {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: rgba(245,240,232,0.85);
+      font-style: italic;
+      margin-bottom: 0.85rem;
+    }
+
+    .quote-source {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+
+    /* ── Discography ── */
+    .disco-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .disco-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .disco-item {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      background: var(--navy-mid);
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+
+    .disco-art {
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      background: var(--navy-light);
+      border: 1px dashed rgba(232,148,58,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .disco-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* keeps it from stretching weird */
+      display: block;
+    }
+
+    .disco-art svg { opacity: 0.3; }
+
+    .disco-info { flex: 1; }
+
+    .disco-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.2rem;
+    }
+
+    .disco-meta {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .disco-type {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      flex-shrink: 0;
+    }
+
+    /* ── Press Photos ── */
+    .photos-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .photos-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 260px)); /* fixed-ish size */
+      justify-content: center; /* keeps them centered */
+      gap: 0.75rem;
+    }
+
+    .photo-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;   /* keeps your clean look */
+      border-radius: 6px;  /* matches your container */
+      display: block;
+    }
+
+    .photo-slot:hover { border-color: var(--orange); }
+
+    .photo-slot svg { opacity: 0.25; }
+
+    .photo-slot span {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.35;
+    }
+
+    /* ── Booking / Contact ── */
+    .contact-section {
+      padding: 3rem 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .contact-card {
+      background: var(--navy-mid);
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      padding: 1.4rem 1.4rem;
+    }
+
+    .contact-role {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-detail {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .contact-detail a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    .contact-detail a:hover { text-decoration: underline; }
+
+    /* EPK download button */
+    .epk-download {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 2.5rem;
+      background: var(--orange);
+      color: var(--navy);
+      border: none;
+      border-radius: 999px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .nav-logo-img {
+      height: 40px;        /* control size */
+      width: auto;         /* keeps aspect ratio */
+      object-fit: contain; /* prevents cropping */
+      border-radius: 0;    /* remove circle */
+      display: block;
+    }
+
+    .btn-download:hover {
+      background: var(--orange-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(232,148,58,0.4);
+    }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links, .nav-socials { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .photos-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .photos-grid { grid-template-columns: 1fr 1fr; }
+      .tagline-text { font-size: 0.85rem; letter-spacing: 0.08em; }
+      .content-wrap { padding: 0 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAV ══ -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo-trans.png" alt="Coral Bank Hollow logo" class="nav-logo-img">
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="shows.html">Shows</a></li>
+      <li><a href="music.html">Music</a></li>
+      <li><a href="#merch">Merch</a></li>
+      <li><a href="media.html">Media</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-socials">
+      <a href="mailto:yourband@email.com" title="Email">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/coralbankhollow/" title="Instagram">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="https://open.spotify.com/artist/0JOY1f8W31tqVf5EaBoRbS" title="Spotify">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      </a>
+      <a href="#" title="TikTok">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.78a4.85 4.85 0 01-1.01-.09z"/></svg>
+      </a>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="nav-mobile-drawer" id="mobileDrawer">
+    <a href="about.html">About</a>
+    <a href="shows.html">Shows</a>
+    <a href="music.html">Music</a>
+    <a href="#merch">Merch</a>
+    <a href="media.html">Media</a>
+    <a href="contact.html">Contact</a>
+    <div class="nav-mobile-socials">
+      <a href="mailto:yourband@email.com"><svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+      <a href="#"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+      <a href="#"><svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg></a>
+      <a href="#"><svg class="icon" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.78a4.85 4.85 0 01-1.01-.09z"/></svg></a>
+    </div>
+  </div>
+
+  <!-- ══ BAND PHOTO BANNER ══ -->
+  <div class="band-photo">
+    <img src="images/bandShort.jpg" alt="Coral Bank Hollow">
+  </div>
+
+  <!-- ══ PAGE CONTENT ══ -->
+  <div class="page">
+
+    <!-- Tagline -->
+    <div class="tagline-section">
+      <div class="tagline-rule"></div>
+      <p class="tagline-text">
+        Your one-liner tagline goes here —<br>
+        genre, vibe, and hometown in one punchy sentence.
+      </p>
+    </div>
+
+    <div class="content-wrap">
+
+      <!-- BIO -->
+      <section class="about-section">
+        <p class="section-label">About</p>
+        <h2 class="section-title">Coral Bank Hollow</h2>
+        <div class="section-body">
+          <p>
+           Coral Bank Hollow didn't start with a plan, just three guys from Blacksburg, Virginia with a shared dream and nowhere better to be. What began as playing for their friends slowly turned into something nobody could stop. Members have come and gone over two-plus years, but the core of it has never changed, get in a room, play music, make people move and feel something.
+
+
+          </p>
+          <p>
+            The band draws from everywhere at once. Their singer grew up on The Doors, their bassist on Peach Pit, their guitarist on Marcus King and Blues legends, and somehow it all lands in the same place. Throw in a drummer who worships Mötley Crüe and a Jerry Garcia & Hendrix influence running through the lead work and you start to understand why a Coral Bank Hollow show doesn't sound like anything else. Their sets move between high-energy fun and the kind of song that makes a room go quiet, the goal always being the same, get people up, keep them there, and send them home with something they'll never forget.
+          </p>
+          <p>
+            The moment it got real was their first professional show in DC. Something clicked that night for all of them, this wasn't just for fun anymore. Since then it's been relentless, gigging three to four nights a week, writing new music every day, and building something show by show. The next step is the stage they know they're headed for, sold out rooms, new cities, and more originals than covers.
+          </p>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="stats-section">
+        <p class="section-label">By the numbers</p>
+        <h2 class="section-title">The Band at a Glance</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-number">2000</span>
+            <span class="stat-label">Monthly Listeners</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">2800</span>
+            <span class="stat-label">Instagram Followers</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">100+</span>
+            <span class="stat-label">Shows Played</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">40,000+</span>
+            <span class="stat-label">Streams</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOUND / GENRE -->
+      <section class="sound-section">
+        <p class="section-label">Sound</p>
+        <h2 class="section-title">Genre &amp; Influences</h2>
+        <div class="section-body">
+          <p>Nobody in Coral Bank Hollow comes from the same background musically, and thats the best part. Every member brings something different to the room, and every idea is always fair game. The result is something that none of them could have made alone.</p>
+        </div>
+        <div class="tags">
+          <span class="tag">Indie Rock</span>
+          <span class="tag">Rock</span>
+          <span class="tag">Blues</span>
+          <span class="tag">Backseat Lovers</span>
+          <span class="tag">Mt. Joy</span>
+          <!--<span class="tag">Influence</span>-->
+        </div>
+      </section>
+
+      <!-- PRESS QUOTES -->
+      <section class="press-section">
+        <p class="section-label">Press</p>
+        <h2 class="section-title">What People Are Saying</h2>
+        <div class="quotes-grid">
+          <div class="quote-card">
+          <p class="quote-text">"Coral Bank Hollow covers some of indie rock’s most recognizable songs as the night continues, to set the stage for the main act. By the time Coral Bank Hollow finishes their set, a hum from the crowd can be heard in anticipation of the main event. "</p>
+            <span class="quote-source">Collegiate Times — April 2026</span>
+          </div>
+          <!--
+          <div class="quote-card">
+            <p class="quote-text">"A second press quote here. Even a glowing social media mention from a well-known account counts."</p>
+            <span class="quote-source">Publication Name — Month Year</span>
+          </div>
+          <div class="quote-card">
+            <p class="quote-text">"A third quote, or a notable review from a venue or promoter who can vouch for your live show."</p>
+            <span class="quote-source">Venue / Promoter — Month Year</span>
+          </div>
+        -->
+        </div>
+      </section>
+
+      <!-- DISCOGRAPHY -->
+      <section class="disco-section">
+        <p class="section-label">Music</p>
+        <h2 class="section-title">Discography</h2>
+        <div class="disco-list">
+
+          <div class="disco-item">
+            <div class="disco-art">
+                <img src="images/white.jpeg" alt="Artwork">
+            </div>
+            <div class="disco-info">
+              <p class="disco-title">White (Please Don't Go)</p>
+              <p class="disco-meta">2025 &nbsp;·&nbsp;Independent</p>
+            </div>
+            <span class="disco-type">SINGLE</span>
+          </div>
+
+          <div class="disco-item">
+            <div class="disco-art">
+              <img src="images/cut.jpg" alt="Artwork">
+            </div>
+            <div class="disco-info">
+              <p class="disco-title">Cut The Line</p>
+              <p class="disco-meta">2025 &nbsp;·&nbsp;Independent</p>
+            </div>
+            <span class="disco-type">Single</span>
+          </div>
+
+          <div class="disco-item">
+            <div class="disco-art">
+             <img src="images/love.png" alt="Artwork">
+            </div>
+            <div class="disco-info">
+              <p class="disco-title">Love Each Other</p>
+              <p class="disco-meta">2026 &nbsp;·&nbsp;Independent</p>
+            </div>
+            <span class="disco-type">Single</span>
+          </div>
+
+          <div class="disco-item">
+            <div class="disco-art">
+              <img src="images/emo.jpg" alt="Artwork">
+            </div>
+            <div class="disco-info">
+              <p class="disco-title">Sienna</p>
+              <p class="disco-meta">2026 &nbsp;·&nbsp;Independent</p>
+            </div>
+            <span class="disco-type">Single</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- PRESS PHOTOS -->
+      <section class="photos-section">
+        <p class="section-label">Media</p>
+        <h2 class="section-title">Press Photos</h2>
+        <p class="photos-note">High-resolution photos available for download. Right-click to save, or contact us directly.</p>
+        <div class="photos-grid">
+          <div class="photo-slot">
+            <img src="images/press1.jpeg" alt="Photo 1">
+          </div>
+          <div class="photo-slot">
+            <img src="images/press2.jpeg" alt="Photo 2">
+          </div>
+          <div class="photo-slot">
+            <img src="images/press3.jpeg" alt="Photo 3">
+          </div>
+        </div>
+      </section>
+
+      <!-- BOOKING / CONTACT -->
+      <section class="contact-section" id="contact">
+        <p class="section-label">Contact</p>
+        <h2 class="section-title">Booking &amp; Inquiries</h2>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <p class="contact-role">Booking</p>
+            <!-- <p class="contact-name">Contact Name</p> -->
+            <p class="contact-detail"><a href="mailto:coralbankhollow@gmail.com">coralbankhollow@gmail.com</a></p>
+          </div>
+          <div class="contact-card">
+            <p class="contact-role">Management</p>
+            <!-- <p class="contact-name">Contact Name</p>-->
+            <p class="contact-detail"><a href="mailto:coralbankhollow@gmail.com">coralbankhollow@gmail.com</a></p>
+          </div>
+          <div class="contact-card">
+            <p class="contact-role">Press &amp; Media</p>
+            <!-- <p class="contact-name">Contact Name</p>-->
+            <p class="contact-detail"><a href="mailto:coralbankhollow@gmail.com">coralbankhollow@gmail.com</a></p>
+          </div>
+        </div>
+        <!--
+        <div class="epk-download">
+          <a href="#" class="btn-download" onclick="downloadPDF()">
+            Download Full EPK
+          </a>
+        </div>
+        -->
+      </section>
+
+    </div><!-- /content-wrap -->
+  </div><!-- /page -->
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const drawer    = document.getElementById('mobileDrawer');
+    hamburger.addEventListener('click', () => drawer.classList.toggle('open'));
+    drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+  function downloadPDF() {
+    const element = document.body; // or target a specific div
+    html2pdf().from(element).save("EPK.pdf");
+  }
+  </script>
+</body>
+</html>

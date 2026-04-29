@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coral Bank Hollow</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600;1,700&family=Josefin+Sans:wght@200;300;400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --nav-bg: #06090f;
+      --nav-height: 64px;
+      --teal: #3bbfcc;
+      --coral: #e8674a;
+      --deep: #060d17;
+      --fog: #c8d8e2;
+      --white: #f2eeea;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-ui: 'Josefin Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--deep);
+      color: var(--white);
+      font-family: var(--font-ui);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      background: var(--nav-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      border-bottom: 1px solid rgba(59, 191, 204, 0.15);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    /* Logo placeholder – swap for your <img> */
+    .nav-logo-img {
+      height: 40px;        /* control size */
+      width: auto;         /* keeps aspect ratio */
+      object-fit: contain; /* prevents cropping */
+      border-radius: 0;    /* remove circle */
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--white);
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 11.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      transition: opacity 0.2s, color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1px;
+      background: var(--teal);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-links a:hover { opacity: 1; color: var(--teal); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-socials a {
+      color: rgba(242,238,234,0.65);
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-socials a:hover { color: var(--teal); }
+
+    .nav-socials svg {
+      width: 17px;
+      height: 17px;
+      fill: currentColor;
+    }
+
+    /* ── HERO ──────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 115vh; /* extra height = scroll room to see full photo */
+      min-height: 700px;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      /* slight blue/teal grade over the photo */
+      filter: saturate(0.92) brightness(0.82);
+    }
+
+    /* layered dark-to-transparent overlays for depth */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(6,9,15,0.55) 0%,
+          rgba(6,9,15,0.1) 30%,
+          rgba(6,9,15,0.1) 60%,
+          rgba(6,9,15,0.7) 100%
+        ),
+        linear-gradient(
+          135deg,
+          rgba(6,30,60,0.25) 0%,
+          transparent 60%,
+          rgba(59,191,204,0.06) 100%
+        );
+    }
+
+    /* faint scanline texture for that moody live-photo feel */
+    .hero-overlay::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.04) 2px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      padding-top: var(--nav-height);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    /* ── BAND NAME ─────────────────────────────────────────── */
+    .band-name-wrap {
+      display: block;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      /* drop-shadow to lift it off the photo */
+      filter: drop-shadow(0 4px 32px rgba(0,0,0,0.7));
+      margin-bottom: 0;
+    }
+
+    /* Swap this entire block for your <img src="logo.png" /> if you have a logo file */
+    .band-name {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(62px, 9vw, 130px);
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      text-align: center;
+
+      /* oceanic-to-coral gradient matching both photo palettes */
+      background: linear-gradient(
+        135deg,
+        #c8eef4 0%,
+        #3bbfcc 25%,
+        #e0f2f5 50%,
+        #e8674a 75%,
+        #f2a07a 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: gradientShift 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* logo placeholder note — remove once you add real logo */
+    .logo-placeholder-note {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-top: 6px;
+      display: none; /* hidden by default, shown if you need guidance */
+    }
+
+    /* ── CTA BUTTONS ───────────────────────────────────────── */
+    .hero-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-top: 0px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 44px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 100px;
+      transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.15s;
+      cursor: pointer;
+      min-width: 240px;
+      text-align: center;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(242,238,234,0.7);
+      backdrop-filter: blur(6px);
+    }
+
+    .btn-outline:hover {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: var(--deep);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline.coral:hover {
+      background: var(--coral);
+      border-color: var(--coral);
+      color: var(--white);
+    }
+
+    /* ── SCROLL HINT ───────────────────────────────────────── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.45;
+      animation: fadeInUp 1.8s ease forwards, bob 2.5s ease-in-out 2s infinite;
+    }
+
+    .scroll-hint span {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scroll-hint svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      to   { opacity: 0.45; transform: translateX(-50%) translateY(0); }
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(5px); }
+    }
+
+    /* ── ENTRY ANIMATIONS ──────────────────────────────────── */
+    .hero-content > * {
+      opacity: 0;
+      animation: riseIn 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+
+    .hero-content > *:nth-child(1) { animation-delay: 0.3s; }
+    .hero-content > *:nth-child(2) { animation-delay: 0.55s; }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── BELOW-FOLD TEASE ──────────────────────────────────── */
+    .below-hero {
+      background: var(--deep);
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top: 1px solid rgba(59,191,204,0.08);
+    }
+
+    .below-hero p {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 18px;
+      color: rgba(200,216,226,0.3);
+      letter-spacing: 0.06em;
+    }
+
+    .nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--white);
+}
+
+.nav-mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 60px; left: 0; right: 0;
+  background: var(--navy);
+  border-bottom: 2px solid var(--orange);
+  z-index: 190;
+  padding: 1.5rem 2rem;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+  .nav-mobile-drawer.open { display: flex; }
+
+  .nav-mobile-drawer a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .nav-mobile-socials {
+    display: flex;
+    gap: 1.2rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .nav-mobile-socials a {
+    color: var(--white);
+    opacity: 0.7;
+    display: flex;
+  }
+
+  .nav-mobile-socials svg {
+    width: 17px;
+    height: 17px;
+    fill: currentColor;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links,
+    .nav-socials { display: none; }
+    .nav-hamburger { display: flex; }
+  }
+
+    @media (max-width: 480px) {
+      .photos-grid { grid-template-columns: 1fr 1fr; }
+      .tagline-text { font-size: 0.85rem; letter-spacing: 0.08em; }
+      .content-wrap { padding: 0 1.25rem; }
+    }
+  </style>
+</head>
+
+
+
+<body>
+
+  <!-- ─────────────── NAV ─────────────── -->
+  <nav>
+    <!-- TOP-LEFT LOGO: swap .nav-logo-img div for <img src="your-logo.png" /> -->
+    <a class="nav-logo" href="index.html" aria-label="Coral Bank Hollow home">
+      <img src="images/logo-trans.png" alt="Coral Bank Hollow logo" class="nav-logo-img">
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="shows.html">Shows</a></li>
+      <li><a href="music.html">Music</a></li>
+      <li><a href="merch.html">Merch</a></li>
+      <li><a href="media.html">Media</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-socials">
+      <!-- Email -->
+      <a href="mailto:coralbankhollow@gmail.com" aria-label="Email">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+        </svg>
+      </a>
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/coralbankhollow/" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.428.403a4.92 4.92 0 011.772 1.153 4.92 4.92 0 011.153 1.772c.163.457.35 1.257.403 2.428.058 1.265.069 1.645.069 4.849s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.403 2.428a4.92 4.92 0 01-1.153 1.772 4.92 4.92 0 01-1.772 1.153c-.457.163-1.257.35-2.428.403-1.265.058-1.645.069-4.849.069s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.428-.403a4.92 4.92 0 01-1.772-1.153 4.92 4.92 0 01-1.153-1.772c-.163-.457-.35-1.257-.403-2.428C2.175 15.747 2.163 15.368 2.163 12s.012-3.584.07-4.85c.054-1.17.24-1.97.403-2.428A4.92 4.92 0 013.79 2.95a4.92 4.92 0 011.772-1.153c.457-.163 1.257-.35 2.428-.403C9.253 2.175 9.632 2.163 12 2.163zm0-2.163C8.756 0 8.333.014 7.053.072 5.775.13 4.902.333 4.14.63a7.07 7.07 0 00-2.561 1.67A7.07 7.07 0 00.63 4.14C.333 4.902.13 5.775.072 7.053.014 8.333 0 8.756 0 12c0 3.244.014 3.667.072 4.947.058 1.278.261 2.151.558 2.913a7.07 7.07 0 001.67 2.561 7.07 7.07 0 002.561 1.67c.762.297 1.635.5 2.913.558C8.333 23.986 8.756 24 12 24s3.667-.014 4.947-.072c1.278-.058 2.151-.261 2.913-.558a7.07 7.07 0 002.561-1.67 7.07 7.07 0 001.67-2.561c.297-.762.5-1.635.558-2.913.058-1.28.072-1.703.072-4.947s-.014-3.667-.072-4.947c-.058-1.278-.261-2.151-.558-2.913a7.07 7.07 0 00-1.67-2.561A7.07 7.07 0 0019.86.63C19.098.333 18.225.13 16.947.072 15.667.014 15.244 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/>
+        </svg>
+      </a>
+      <!-- Spotify -->
+      <a href="https://open.spotify.com/artist/0JOY1f8W31tqVf5EaBoRbS" aria-label="Spotify">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.52 17.316a.75.75 0 01-1.032.25c-2.824-1.726-6.378-2.116-10.564-1.16a.75.75 0 01-.332-1.463c4.577-1.043 8.502-.594 11.678 1.34a.75.75 0 01.25 1.033zm1.476-3.284a.938.938 0 01-1.29.307c-3.23-1.986-8.155-2.562-11.98-1.402a.938.938 0 01-.545-1.793c4.36-1.322 9.784-.682 13.508 1.597a.938.938 0 01.307 1.29zm.127-3.42c-3.876-2.302-10.273-2.514-13.972-1.39a1.126 1.126 0 01-.656-2.153c4.242-1.292 11.286-1.043 15.742 1.608a1.126 1.126 0 01-1.114 1.935z"/>
+        </svg>
+      </a>
+      <!-- TikTok -->
+      <a href="#" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+        </svg>
+      </a>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    
+  </nav>
+
+  <div class="nav-mobile-drawer" id="mobileDrawer">
+    <a href="about.html">About</a>
+    <a href="shows.html">Shows</a>
+    <a href="music.html">Music</a>
+    <a href="merch.html">Merch</a>
+    <a href="media.html">Media</a>
+    <a href="contact.html">Contact</a>
+    <div class="nav-mobile-socials">
+      <a href="mailto:coralbankhollow@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+      <a href="https://www.instagram.com/coralbankhollow/" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.428.403a4.92 4.92 0 011.772 1.153 4.92 4.92 0 011.153 1.772c.163.457.35 1.257.403 2.428.058 1.265.069 1.645.069 4.849s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.403 2.428a4.92 4.92 0 01-1.153 1.772 4.92 4.92 0 01-1.772 1.153c-.457.163-1.257.35-2.428.403-1.265.058-1.645.069-4.849.069s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.428-.403a4.92 4.92 0 01-1.772-1.153 4.92 4.92 0 01-1.153-1.772c-.163-.457-.35-1.257-.403-2.428C2.175 15.747 2.163 15.368 2.163 12s.012-3.584.07-4.85c.054-1.17.24-1.97.403-2.428A4.92 4.92 0 013.79 2.95a4.92 4.92 0 011.772-1.153c.457-.163 1.257-.35 2.428-.403C9.253 2.175 9.632 2.163 12 2.163zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg></a>
+      <a href="https://open.spotify.com/artist/0JOY1f8W31tqVf5EaBoRbS" aria-label="Spotify"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.52 17.316a.75.75 0 01-1.032.25c-2.824-1.726-6.378-2.116-10.564-1.16a.75.75 0 01-.332-1.463c4.577-1.043 8.502-.594 11.678 1.34a.75.75 0 01.25 1.033zm1.476-3.284a.938.938 0 01-1.29.307c-3.23-1.986-8.155-2.562-11.98-1.402a.938.938 0 01-.545-1.793c4.36-1.322 9.784-.682 13.508 1.597a.938.938 0 01.307 1.29zm.127-3.42c-3.876-2.302-10.273-2.514-13.972-1.39a1.126 1.126 0 01-.656-2.153c4.242-1.292 11.286-1.043 15.742 1.608a1.126 1.126 0 01-1.114 1.935z"/></svg></a>
+      <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+    </div>
+  </div>
+
+  <!-- ─────────────── HERO ─────────────── -->
+  <section class="hero">
+    <img class="hero-img" src="images/hero.jpeg" alt="Coral Bank Hollow band photo" />
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+
+      <!-- CENTER LOGO / BAND NAME -->
+      <!-- Option A (default): styled text as the centerpiece -->
+      <div class="band-name-wrap">
+        <!-- <h1 class="band-name">Coral Bank Hollow</h1> -->
+
+        <img src="images/logo-trans.png"
+            alt="Coral Bank Hollow"
+            style="max-width: min(520px, 80vw); height: auto; object-fit: contain;">
+      </div>
+
+      <!-- CTA BUTTONS -->
+      <div class="hero-buttons">
+        <a href="contact.html" class="btn btn-outline">Join Our Community</a>
+        <a href="shows.html"   class="btn btn-outline coral">Upcoming Shows</a>
+      </div>
+
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- below-fold tease so the scroll feels intentional -->
+  <div class="below-hero">
+    <p>Est. Blacksburg, Virginia</p>
+  </div>
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const drawer = document.getElementById('mobileDrawer');
+  hamburger.addEventListener('click', () => drawer.classList.toggle('open'));
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
+</script>
+
+</body>
+</html>
