@@ -1,0 +1,1 @@
+const CONTACT_EMAIL = "booking@coralbankhollow.com";
